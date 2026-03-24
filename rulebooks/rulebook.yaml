@@ -1,1 +1,12 @@
-test
+---
+- name: Listen for Webhook Events
+  hosts: all
+  sources:
+    - ansible.eda.webhook:
+        port: 5000
+  rules:
+    - name: Respond to a payload
+      condition: event.payload.message == "Hello"
+      action:
+        debug:
+
