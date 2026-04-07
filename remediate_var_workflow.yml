@@ -1,0 +1,22 @@
+---
+- name: Fleet-wide /var Remediation
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Get /var usage percentage
+      ansible.builtin.shell: df /var | awk 'NR==2 {gsub(/%/,""); print $5}'
+      register: var_usage
+      changed_when: false
+
+    - name: Null large log files if usage > 80%
+      ansible.builtin.shell: |
+        find /var/log -type f -size +100M -exec truncate -s 0 {} +
+      when: var_usage.stdout | int > 80
+
+    - name: Clear DNF/YUM cache if usage > 80%
+      ansible.builtin.dnf:
+        update_cache: yes
+        clean_facts: yes
+      when: 
+        - var_usage.stdout | int > 80
+        - ansible_os_family == "RedHat"
