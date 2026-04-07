@@ -1,0 +1,6 @@
+---
+sources:
+  - name: var_usage_facts
+    type: ansible_facts
+    interval: 60   # poll every 60 seconds
+    hosts: all     # monitor all hosts
