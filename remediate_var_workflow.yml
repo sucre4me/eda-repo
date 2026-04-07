@@ -1,5 +1,7 @@
 - name: Fleet-wide /var/log Remediation
   hosts: all
+  become: True
+  become_method: sudo
   gather_facts: no
   tasks:
     - name: Get /var/log usage percentage
