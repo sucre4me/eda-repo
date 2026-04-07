@@ -1,0 +1,23 @@
+---
+- name: Truncate /var filesystem files
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Truncate log files in /var/log
+      shell: "cat /dev/null > {{ item }}"
+      loop: "{{ lookup('fileglob','/var/log/*.log', wantlist=True) }}"
+      ignore_errors: yes
+
+    - name: Truncate files in /var/tmp
+      shell: "cat /dev/null > {{ item }}"
+      loop: "{{ lookup('fileglob','/var/tmp/*', wantlist=True) }}"
+      ignore_errors: yes
+
+    - name: Truncate files in /var/cache
+      shell: "cat /dev/null > {{ item }}"
+      loop: "{{ lookup('fileglob','/var/cache/*', wantlist=True) }}"
+      ignore_errors: yes
+
+    - name: Run logrotate to rotate and compress logs
+      command: logrotate -f /etc/logrotate.conf
+      ignore_errors: yes
