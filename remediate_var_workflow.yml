@@ -17,10 +17,3 @@
       ansible.builtin.shell: |
         find /var/log -type f -size +100M -exec truncate -s 0 {} +
       when: varlog_usage.stdout | int > 80
-
-    - name: Clear DNF/YUM cache if usage > 80%
-      ansible.builtin.dnf:
-        update_cache: yes
-        clean_facts: yes
-      when:
-        - varlog_usage.stdout | int > 80
