@@ -1,0 +1,13 @@
+---
+rules:
+  - name: Trim /var if usage exceeds 90%
+    conditions:
+      - event_type: ansible_facts
+        fact: ansible_mounts
+        operator: contains
+        value:
+          mount: "/var"
+          percent: ">=90"
+    actions:
+      - name: Trigger /var cleanup workflow
+        workflow: trim_var_workflow.yml
