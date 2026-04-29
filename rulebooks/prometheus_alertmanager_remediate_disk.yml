@@ -1,19 +1,18 @@
-# remediate_disk.yml
 ---
 - name: Listen for Disk Alerts via Event Stream
   hosts: all
   sources:
-    - ansible.eda.pg_listener:
-        # No extra config needed; AAP handles the connection
+    - ansible.eda.pg_listener: {}  # Use {} instead of leaving it blank
   rules:
     - name: Cleanup /var/log when filesystem > 80%
       condition: 
-        event.payload.alert.status == "firing" and
-        event.payload.alert.labels.mountpoint == "/var/log"
+        # IMPORTANT: Use .alerts[0] because Alertmanager sends a list (array)
+        event.payload.alerts[0].status == "firing" and
+        event.payload.alerts[0].labels.mountpoint == "/var/log"
       action:
         run_job_template:
           name: "Disk Cleanup Playbook"
           organization: "Default"
           job_args:
             extra_vars:
-              target_host: "{{ event.payload.alert.labels.instance }}"
+              target_host: "{{ event.payload.alerts[0].labels.instance }}"
