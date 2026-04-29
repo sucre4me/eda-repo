@@ -1,7 +1,9 @@
 ---
 - name: Disk Remediation Playbook for /var/log
   hosts: all
-  become: yes
+  become: True
+  become_method: sudo
+  gather_facts: no
   tasks:
     - name: Find and truncate all .log files in /var/log larger than 100MB
       ansible.builtin.shell: |
