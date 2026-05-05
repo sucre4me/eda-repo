@@ -13,6 +13,7 @@
         run_job_template:
           name: "Disk Cleanup Playbook"
           organization: "Default"
+          limit: "{{ event.payload.alerts[0].labels.instance }}"
           job_args:
             extra_vars:
               target_host: "{{ event.payload.alerts[0].labels.instance }}"
