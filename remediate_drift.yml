@@ -1,0 +1,12 @@
+---
+- name: Production Remediation - Enforce Secure Baseline
+  hosts: "{{ eda_drifted_host }}"
+  gather_facts: false
+  tasks:
+    - name: Enforce declarative configuration state over SSH
+      ansible.builtin.template:
+        src: templates/index.html.j2
+        dest: /var/www/html/index.html
+        owner: apache
+        group: apache
+        mode: '0644'
