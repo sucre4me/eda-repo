@@ -2,6 +2,7 @@
 - name: Production Remediation - Enforce Secure Baseline
   hosts: "{{ eda_drifted_host | default(ansible_eda.event.payload.drifted_host) | default('192.168.9.159') }}"
   gather_facts: false
+  become: true
   tasks:
     - name: Enforce declarative configuration state over SSH
       ansible.builtin.template:
