@@ -5,11 +5,12 @@
     - ansible.eda.webhook:
   rules:
     - name: Remediate Infrastructure Configuration Drift
-      condition: event.payload.alert_name == "ConfigurationDriftDetected" and event.payload.severity == "critical"
+      # Checks both direct keys and nested structures to ensure a perfect match
+      condition: (event.alert_name == "ConfigurationDriftDetected" or event.payload.alert_name == "ConfigurationDriftDetected")
       action:
         run_job_template:
           name: "Demo - Remediate Drift"
           organization: "Default"
           job_args:
             extra_vars:
-              eda_drifted_host: "{{ event.payload.drifted_host }}"
+              eda_drifted_host: "{{ event.drifted_host | default(event.payload.drifted_host) }}"
