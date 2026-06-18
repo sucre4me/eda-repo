@@ -1,17 +1,17 @@
 ---
-- name: Production Audit - Agentless Configuration Drift Scanner
+- name: Production Fleet Audit - Agentless Configuration Drift Scanner
   hosts: all
   gather_facts: false
   vars:
-    # Use your specific Token Event Stream endpoint URL generated in Step 1
+    # Paste your unique Token Event Stream URL here
     eda_stream_url: "https://aap-enterprise-aap.apps.ocp4.teneceocp.com/eda-event-streams/api/eda/v1/external_event_stream/4cce023f-3aaf-4ffd-ad18-86172f4d619a/post/"
-  
+
   tasks:
-    - name: Audit target configuration state over SSH
+    - name: Audit target configuration state over SSH (Check Mode)
       ansible.builtin.template:
         src: templates/index.html.j2
         dest: /var/www/html/index.html
-      check_mode: true
+      check_mode: true              # Only tests for differences; makes zero modifications on the host
       register: audit_result
 
     - name: Securely post drift alert to AAP Gateway Event Stream
@@ -21,11 +21,11 @@
         body_format: json
         validate_certs: false
         headers:
-          # This lookup reads the native platform credential token automatically
+          # This native line reads your OAuth Token credential automatically
           Authorization: "Bearer {{ lookup('ansible.builtin.env', 'CONTROLLER_OAUTH_TOKEN') }}"
         body:
           alert_name: "ConfigurationDriftDetected"
           drifted_host: "{{ inventory_hostname }}"
           severity: "critical"
-      when: audit_result.changed
-      delegate_to: localhost
+      when: audit_result.changed     # ONLY fires if a change was detected
+      delegate_to: localhost         # Executes locally from AAP, leaving the target nodes untouched
