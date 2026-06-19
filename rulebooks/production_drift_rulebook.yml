@@ -12,6 +12,5 @@
           organization: "Default"
           job_args:
             extra_vars:
-              # Strips the protocol prefix and resource path to isolate the target IP address
+              # Strips http:// prefix and /index.html suffix to extract the clean IP address
               eda_drifted_host: "{{ event.payload.alerts.labels.instance | regex_replace('^https?://', '') | regex_replace('/.*$', '') }}"
-
