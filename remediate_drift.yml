@@ -1,6 +1,6 @@
 ---
 - name: Production Remediation - Enforce Secure Baseline
-  hosts: "{{ eda_drifted_host | default('192.168.9.159') }}"
+  hosts: "{{ eda_drifted_host }}"
   gather_facts: false
   become: true
   tasks:
@@ -11,3 +11,4 @@
         owner: apache
         group: apache
         mode: '0644'
+
