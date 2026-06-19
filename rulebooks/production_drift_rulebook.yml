@@ -4,12 +4,14 @@
   sources:
     - ansible.eda.webhook:
   rules:
-    - name: Remediate Infrastructure Configuration Drift
-      condition: event.payload.alert_name == "ConfigurationDriftDetected"
+    - name: Catch Prometheus Fleet Alert and Auto Heal
+      condition: event.payload.alerts.labels.alertname == "ConfigurationDriftDetected"
       action:
         run_job_template:
           name: "Demo - Remediate Drift"
           organization: "Default"
           job_args:
             extra_vars:
-              eda_drifted_host: "{{ event.payload.drifted_host }}"
+              # Strips the protocol prefix and resource path to isolate the target IP address
+              eda_drifted_host: "{{ event.payload.alerts.labels.instance | regex_replace('^https?://', '') | regex_replace('/.*$', '') }}"
+
