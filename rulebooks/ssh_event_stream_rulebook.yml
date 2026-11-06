@@ -1,0 +1,19 @@
+---
+- name: AAP 2.7 Tokenized Event Stream Listener
+  hosts: all
+  sources:
+    - ansible.eda.event_stream:
+        host: 0.0.0.0
+        port: 5001
+        token: "{{ eda_token }}" # Leave exactly as-is; AAP 2.7 maps this automatically
+
+  rules:
+    - name: Catch Configuration Baseline Deviation
+      condition: event.payload.status == "drifted" and event.payload.config_item == "PermitRootLogin"
+      action:
+        run_job_template:
+          name: "Remediate SSH Hardening Drift"
+          organization: "Default"
+          job_args:
+            extra_vars:
+              target_host: "{{ event.payload.hostname }}"
