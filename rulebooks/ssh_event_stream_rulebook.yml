@@ -9,7 +9,7 @@
 
   rules:
     - name: Catch Configuration Baseline Deviation
-      condition: event.payload.status == "drifted" and event.payload.config_item == "PermitRootLogin"
+      condition: event.payload.status == "drifted" and event.payload.config_item == "SSHD_CONFIGURATION"
       action:
         run_job_template:
           name: "simulator"
