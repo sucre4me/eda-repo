@@ -25,6 +25,17 @@
       register: sshd_drift
       diff: false
 
+- name: Verify EDA token is available
+  ansible.builtin.assert:
+    that:
+      - eda_token is defined
+      - eda_token | length > 0
+    fail_msg: "EDA token is missing from the execution environment."
+    success_msg: "EDA token is available."
+  no_log: false
+  delegate_to: localhost
+  become: false
+
     - name: Send SSHD configuration drift event to EDA
       ansible.builtin.uri:
         url: "{{ eda_event_stream_url }}"
