@@ -9,11 +9,11 @@
 
   rules:
     - name: Catch Configuration Baseline Deviation
-      condition: event.payload.status == "drifted" and event.payload.config_item == "SSHD_CONFIGURATION"
+      condition: event.payload.payload.status == "drifted" and event.payload.payload.config_item == "SSHD_CONFIGURATION"
       action:
         run_job_template:
           name: "simulator"
           organization: "Default"
           job_args:
             extra_vars:
-              target_host: "{{ event.payload.hostname }}"
+              target_host: "{{ event.payload.payload.hostname }}"
