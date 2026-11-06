@@ -1,0 +1,15 @@
+---
+- name: AAP 2.7 Tokenized Event Stream Listener
+  hosts: all
+  sources:
+    - ansible.eda.event_stream:
+        host: 0.0.0.0
+        port: 5001
+        token: "{{ eda_token }}"
+
+  rules:
+    - name: Debug and Print Raw Event Structure
+      # This condition matches any incoming event containing data
+      condition: event is defined
+      action:
+        debug:
