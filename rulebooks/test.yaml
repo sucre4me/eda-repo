@@ -9,7 +9,7 @@
 
   rules:
     - name: Debug and Print Raw Event Structure
-      # This condition matches any incoming event containing data
-      condition: event is defined
+      # FIXED: Changed to a valid condition comparison expression
+      condition: event.meta is defined
       action:
         debug:
