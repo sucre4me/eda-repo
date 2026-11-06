@@ -1,6 +1,6 @@
 ---
 - name: AAP 2.7 Enforce Entire Golden SSHD Baseline Image
-  hosts: "{{ target_host }}"
+  hosts: all
   become: true
   gather_facts: false
 
