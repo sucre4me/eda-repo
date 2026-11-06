@@ -53,7 +53,7 @@
             hostname: "{{ inventory_hostname }}"
             baseline: golden
             detected_by: AAP_2.7_AGENTLESS
-        validate_certs: true
+        validate_certs: false
         status_code:
           - 200
           - 201
