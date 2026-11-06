@@ -12,7 +12,7 @@
       condition: event.payload.status == "drifted" and event.payload.config_item == "PermitRootLogin"
       action:
         run_job_template:
-          name: "Remediate SSH Hardening Drift"
+          name: "simulator"
           organization: "Default"
           job_args:
             extra_vars:
