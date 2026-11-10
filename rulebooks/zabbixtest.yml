@@ -1,0 +1,13 @@
+---
+- name: Capture Zabbix Monitoring Events
+  hosts: all
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5000  # Note: In AAP 2.7, Event Streams intercept and route this automatically via port 443
+  rules:
+    - name: Catch-all Zabbix Problem Alerts
+      condition: event.payload is defined
+      action:
+        debug:
+          msg: "Successfully caught Zabbix alert: {{ event.payload.event_name }}"
