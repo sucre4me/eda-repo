@@ -6,9 +6,7 @@
         host: 0.0.0.0
         port: 5000
   rules:
-    - name: Catch-all Zabbix Problem Alerts
-      # 🌟 CHANGE THIS LINE to look for root fields sent by Zabbix
-      condition: event.event_id is defined
+    - name: Pure Catch-All Debug
+      condition: true  # 🌟 Forces the rule to fire on ANY incoming data block
       action:
         debug:
-          msg: "Successfully caught Zabbix alert ID {{ event.event_id }} for host {{ event.host_host }}"
