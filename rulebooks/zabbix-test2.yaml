@@ -1,16 +1,12 @@
-
 ---
 - name: Monitor Zabbix Disk Space Events
   hosts: all
-
   sources:
     - ansible.eda.webhook:
         host: 0.0.0.0
         port: 5000
-
   rules:
-    - name: Test Zabbix Event Name
-      condition: event.payload.event_name == "Linux: FS [/var/log]: Space is low (used > 80%, total 19.9GB)"
+    - name: Test Zabbix Disk Space Matching
+      condition: event.payload.event_name is search("/var/log")
       action:
         debug:
-
