@@ -7,7 +7,6 @@
         port: 5000
   rules:
     - name: Remediate High /var/log Disk Usage
-      # Triggers if the alert mentions '/var/log' and the severity metrics are high
       condition: >
         event.payload.event_name contains "/var/log" or 
         event.payload.trigger_description contains "/var/log"
@@ -17,5 +16,6 @@
           organization: "Default"
           job_args:
             extra_vars:
-              target_host: "{{ event.payload.host_host }}"
+              # 🌟 FIXED: Pass the IP address instead of the hostname!
+              target_host: "{{ event.payload.host_ip }}"
               zabbix_event_id: "{{ event.payload.event_id }}"
