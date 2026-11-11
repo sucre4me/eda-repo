@@ -1,6 +1,6 @@
 
 ---
-- name: Monitor Zabbix Disk Space Events
+- name: Test Zabbix Disk Space Matching
   hosts: all
 
   sources:
@@ -10,9 +10,6 @@
 
   rules:
     - name: Test Zabbix Disk Space Matching
-
-      condition: event.payload.event_name is defined
-
+      condition: event.payload.event_name contains "/var/log"
       action:
         debug:
-          msg: "Zabbix event received and matched successfully"
