@@ -1,29 +1,17 @@
 ---
-- name: Automatically Trim /var/log Files
-  hosts: all
-  become: true
-  gather_facts: true
-
+- name: Disk Remediation Playbook for /var/log (Zabbix Integrated)
+  hosts: "{{ target_host | default('all') }}"
+  become: True
+  become_method: sudo
+  gather_facts: no
+  
   tasks:
-    - name: Verify active /var/log disk usage utilization percentage
-      set_fact:
-        log_disk_usage: "{{ item.mount == '/var' | ternary(item.size_available / item.size_total * 100, omit) }}"
-      loop: "{{ ansible_facts.mounts }}"
-      when: item.mount == '/var' or item.mount == '/'
+    - name: Find and truncate all .log files in /var/log larger than 100MB
+      ansible.builtin.shell: |
+        find /var/log -name "*.log" -size +100M -exec truncate -s 0 {} \;
+      register: cleanup_output
+      changed_when: cleanup_output.rc == 0
 
-    - name: Collect large or un-rotated log files
-      find:
-        paths: /var/log
-        size: 50M
-        recurse: yes
-      register: large_logs
-
-    - name: Safely truncate logs above size thresholds
-      shell: "truncate -s 0 {{ item.path }}"
-      loop: "{{ large_logs.files }}"
-      when: large_logs.matched > 0
-      register: truncate_status
-
-    - name: Acknowledge and resolve the alert back inside Zabbix
-      debug:
-        msg: "Cleaned up host {{ target_host }} for Zabbix Incident ID {{ zabbix_event_id }}"
+    - name: Log remediation success context
+      ansible.builtin.debug:
+        msg: "Successfully cleaned /var/log on IP {{ target_host | default(inventory_hostname) }} for Zabbix Event ID {{ zabbix_event_id | default('Manual_Run') }}"
