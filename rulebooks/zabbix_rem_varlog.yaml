@@ -7,10 +7,9 @@
         port: 5000
   rules:
     - name: Remediate High /var/log Disk Usage
-      # 🌟 FIXED: Uses regex to match /var/log case-insensitively, bypassing whitespace/brackets issues
       condition: >
-        event.payload.event_name matches "(?i).*/var/log.*" or 
-        event.payload.trigger_name matches "(?i).*/var/log.*"
+        event.payload.event_name contains "/var/log" or 
+        event.payload.trigger_name contains "/var/log"
       action:
         run_job_template:
           name: "Remediate Disk Space Playbook"
