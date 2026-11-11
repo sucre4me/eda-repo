@@ -9,12 +9,8 @@
         port: 5000
 
   rules:
-    - name: Remediate High /var/log Disk Usage
-
-      condition: >
-        event.payload.event_name contains "/var/log" or
-        event.payload.trigger_name contains "/var/log"
-
+    - name: Test Zabbix Event Name
+      condition: event.payload.event_name == "Linux: FS [/var/log]: Space is low (used > 80%, total 19.9GB)"
       action:
         debug:
 
