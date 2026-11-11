@@ -6,11 +6,9 @@
         host: 0.0.0.0
         port: 5000
   rules:
-    - name: Remediate High var log Disk Usage
-      # 🌟 FIXED: Returned to the native, valid 'contains' operator
-      condition: >
-        event.payload.event_name contains "/var/log" or 
-        event.payload.trigger_name contains "/var/log"
+    - name: Remediate High /var/log Disk Usage
+      # 🌟 BULLETPROOF LOGIC: Targets the clean tag array directly, bypassing string bracket bugs!
+      condition: event.payload.event_tags.filesystem contains "/var/log"
       action:
         run_job_template:
           name: "Remediate Disk Space Playbook"
