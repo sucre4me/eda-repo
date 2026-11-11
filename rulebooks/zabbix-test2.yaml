@@ -1,6 +1,6 @@
 
 ---
-- name: Test Zabbix Disk Space Matching
+- name: Monitor Zabbix Disk Space Events
   hosts: all
 
   sources:
@@ -9,7 +9,12 @@
         port: 5000
 
   rules:
-    - name: Test Zabbix Disk Space Matching
-      condition: event.payload.event_name contains "/var/log"
+    - name: Remediate High /var/log Disk Usage
+
+      condition: >
+        event.payload.event_name contains "/var/log" or
+        event.payload.trigger_name contains "/var/log"
+
       action:
         debug:
+
