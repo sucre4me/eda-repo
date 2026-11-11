@@ -1,6 +1,6 @@
 ---
 - name: Automatically Trim /var/log Files
-  hosts: "{{ target_host }}"
+  hosts: all
   become: true
   gather_facts: true
 
